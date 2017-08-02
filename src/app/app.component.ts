@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MidiDeviceService } from './midi-device.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'app';
+  names: string[];
+
+  constructor(private midi: MidiDeviceService) {
+  }
+
+  connect(): void {
+    this.midi.connectMidiDevices()
+      .then(() => {
+        this.names = this.midi.midiDevices.inputDeviceNames;
+      });
+  }
 }
