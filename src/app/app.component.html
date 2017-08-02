@@ -1,5 +1,12 @@
 <button (click)="connect()">Connect</button>
+<form #f="ngForm">
+  <ul>
+    <li *ngFor="let name of names">
+      {{name}}
+    </li>
+  </ul>
 
-<ul>
-  <li *ngFor="let name of names">{{name}}</li>
-</ul>
+  <div>
+    {{message | json}}
+  </div>
+</form>
