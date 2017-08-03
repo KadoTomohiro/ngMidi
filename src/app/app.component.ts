@@ -5,6 +5,7 @@ import 'rxjs/add/operator/map';
 import MIDIInput = WebMidi.MIDIInput;
 import { MidiInputDevice } from './midi-input-device';
 import { MidiOutputDevice } from './midi-output-device';
+import { MidiDevices } from './midi-devices';
 
 @Component({
   selector: 'app-root',
@@ -21,18 +22,9 @@ export class AppComponent {
   connect(): void {
     this.inputs = [];
     this.midi.connectMidiDevices()
-      .then(() => {
-        const allDevices = this.midi.midiDevices;
-        this.inputs = allDevices.inputDevices;
-        this.outputs = allDevices.outputDevices;
-
-        const inDevice = this.inputs.find(input => input.device.name === 'Virtual MIDI Keyboard');
-        const outDevice = this.outputs.find(output => output.device.name === 'MidiMock IN');
-
-        inDevice.message.subscribe(data => {
-          outDevice.device.send(Array.from(data));
-        });
-
+      .then((midi: MidiDevices) => {
+        this.inputs = midi.inputDevices;
+        this.outputs = midi.outputDevices;
       });
   }
 

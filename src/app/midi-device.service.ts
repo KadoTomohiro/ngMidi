@@ -7,14 +7,15 @@ import MIDIAccess = WebMidi.MIDIAccess;
 @Injectable()
 export class MidiDeviceService {
 
-  midiDevices = new MidiDevices();
+  constructor() {
+  }
 
-  constructor() {}
-
-  connectMidiDevices(): Promise<void> {
+  connectMidiDevices(): Promise<MidiDevices> {
+    const midiDevices = new MidiDevices();
     return window.navigator.requestMIDIAccess()
       .then((midiAccess: MIDIAccess) => {
-        this.midiDevices.setMidiDevices(midiAccess);
+        midiDevices.setMidiDevices(midiAccess);
+        return midiDevices;
       });
   }
 }
