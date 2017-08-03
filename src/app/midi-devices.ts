@@ -4,15 +4,10 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import MIDIMessageEvent = WebMidi.MIDIMessageEvent;
 import MIDIAccess = WebMidi.MIDIAccess;
-import { MidiMessage } from './midi-message';
 
 export class MidiDevices {
 
-  private readonly MIDI_MESSAGE_DATA_STATUS = 0;
-  private readonly MIDI_MESSAGE_DATA_NOTE = 1;
-  private readonly MIDI_MESSAGE_DATA_VELOCITY = 2;
-
-  private inputs = new Map<string, { device: MIDIInput, message: Observable<MidiMessage> }>();
+  private inputs = new Map<string, { device: MIDIInput, message: Observable<Uint8Array>}>();
   private outputs = new Map<string, MIDIOutput>();
 
   constructor() {
@@ -27,32 +22,26 @@ export class MidiDevices {
   }
 
   addInputDevice(device: MIDIInput): void {
-
-
     const message = Observable
       .fromEvent(device, 'midimessage')
       .map((e: MIDIMessageEvent) => {
-        return {
-          status: e.data[this.MIDI_MESSAGE_DATA_STATUS],
-          noteNo: e.data[this.MIDI_MESSAGE_DATA_NOTE],
-          velocity: e.data[this.MIDI_MESSAGE_DATA_VELOCITY]
-        };
+        return e.data;
       });
-    this.inputs.set(device.name, {
+    this.inputs.set(device.id, {
       device: device,
       message: message
     });
   }
 
   addOutputDevice(device: MIDIOutput): void {
-    this.outputs.set(device.name, device);
+    this.outputs.set(device.id, device);
   }
 
   getInputDevice(name: string): MIDIInput {
     return this.inputs.get(name).device;
   }
 
-  midiMessage(name: string): Observable<MidiMessage> {
+  midiMessage(name: string): Observable<Uint8Array> {
     return this.inputs.get(name).message;
   }
 
@@ -61,9 +50,11 @@ export class MidiDevices {
   }
 
   setMidiDevices(midiAccess: MIDIAccess) {
+    this.inputs.clear();
     midiAccess.inputs.forEach(input => {
       this.addInputDevice(input);
     });
+    this.outputs.clear();
     midiAccess.outputs.forEach(output => {
       this.addOutputDevice(output);
     });
