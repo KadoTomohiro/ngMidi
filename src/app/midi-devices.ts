@@ -4,21 +4,31 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/fromEvent';
 import MIDIMessageEvent = WebMidi.MIDIMessageEvent;
 import MIDIAccess = WebMidi.MIDIAccess;
+import { MidiInputDevice } from './midi-input-device';
+import { MidiOutputDevice } from './midi-output-device';
 
 export class MidiDevices {
 
-  private inputs = new Map<string, { device: MIDIInput, message: Observable<Uint8Array>}>();
-  private outputs = new Map<string, MIDIOutput>();
+  private inputs = new Map<string, MidiInputDevice>();
+  private outputs = new Map<string, MidiOutputDevice>();
 
   constructor() {
   }
 
-  get inputDeviceNames(): string[] {
+  get inputDeviceKeys(): string[] {
     return Array.from(this.inputs.keys());
   }
 
-  get outputDevicesNames(): string[] {
+  get outputDevicesKeys(): string[] {
     return Array.from(this.outputs.keys());
+  }
+
+  get inputDevices(): MidiInputDevice[] {
+    return Array.from(this.inputs.values());
+  }
+
+  get outputDevices(): MidiOutputDevice[] {
+    return Array.from(this.outputs.values());
   }
 
   addInputDevice(device: MIDIInput): void {
@@ -34,7 +44,7 @@ export class MidiDevices {
   }
 
   addOutputDevice(device: MIDIOutput): void {
-    this.outputs.set(device.id, device);
+    this.outputs.set(device.id, {device: device});
   }
 
   getInputDevice(name: string): MIDIInput {
@@ -46,7 +56,7 @@ export class MidiDevices {
   }
 
   getOutputDevice(name: string): MIDIOutput {
-    return this.outputs.get(name);
+    return this.outputs.get(name).device;
   }
 
   setMidiDevices(midiAccess: MIDIAccess) {

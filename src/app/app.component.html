@@ -1,12 +1,14 @@
 <button (click)="connect()">Connect</button>
-<form #f="ngForm">
+<h2>Input</h2>
   <ul>
-    <li *ngFor="let name of names">
-      {{name}}
+    <li *ngFor="let input of inputs">
+      {{input.device.name}}: {{input.message | async | json}}
     </li>
   </ul>
 
-  <div>
-    {{message | json}}
-  </div>
-</form>
+<h2>Output</h2>
+<ul>
+  <li *ngFor="let output of outputs">
+    {{output.device.name}}
+  </li>
+</ul>
