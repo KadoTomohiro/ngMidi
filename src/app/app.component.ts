@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { MidiDeviceService } from './midi-device.service';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
-import MIDIInput = WebMidi.MIDIInput;
 import { MidiInputDevice } from './midi-input-device';
 import { MidiOutputDevice } from './midi-output-device';
 import { MidiDevices } from './midi-devices';
+import { MidiMessage } from './midi-message';
+import { MidiAudioService } from './midi-audio.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ export class AppComponent {
   inputs: MidiInputDevice[];
   outputs: MidiOutputDevice[];
 
-  constructor(private midi: MidiDeviceService) {
+  constructor(private midi: MidiDeviceService, private midiAudio: MidiAudioService) {
   }
 
   connect(): void {
@@ -25,7 +25,11 @@ export class AppComponent {
       .then((midi: MidiDevices) => {
         this.inputs = midi.inputDevices;
         this.outputs = midi.outputDevices;
+
+        this.inputs[0].message.subscribe(msg => {
+          const midiMessage = new MidiMessage(msg);
+          this.midiAudio.send(midiMessage);
+        });
       });
   }
-
 }
