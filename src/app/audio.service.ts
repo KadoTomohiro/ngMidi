@@ -1,33 +1,22 @@
 import { Injectable } from '@angular/core';
+import { Harp } from './harp';
 
 @Injectable()
 export class AudioService {
 
   context = new AudioContext();
-  destination = this.context.destination;
-  private oscMap = new Map<number, OscillatorNode>();
+  harp = new Harp(this.context);
 
   constructor() {
   }
 
   on(frequency: number) {
-    console.log('note on');
+    this.harp.on(frequency);
 
-    const osc: OscillatorNode = this.context.createOscillator();
-
-    osc.connect(this.destination);
-
-    osc.frequency.value = frequency;
-    osc.start(0);
-
-    this.oscMap.set(frequency, osc);
   }
 
   off(frequency: number) {
-
-    const osc = this.oscMap.get(frequency);
-
-    osc.stop(0);
+    this.harp.off(frequency);
   }
 
 }
