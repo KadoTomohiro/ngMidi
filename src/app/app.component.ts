@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MidiDeviceService } from './midi-device.service';
 import 'rxjs/add/operator/map';
 import { MidiInputDevice } from './midi-input-device';
@@ -12,11 +12,16 @@ import { MidiAudioService } from './midi-audio.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
   inputs: MidiInputDevice[];
   outputs: MidiOutputDevice[];
 
   constructor(private midi: MidiDeviceService, private midiAudio: MidiAudioService) {
+  }
+
+  ngOnInit(): void {
+    this.connect();
   }
 
   connect(): void {
