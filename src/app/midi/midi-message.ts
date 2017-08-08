@@ -32,6 +32,5 @@ export class MidiMessage {
   get velocity(): number {
     return this._message[2];
   }
-  // TODO これは多分別の場所
 
 }

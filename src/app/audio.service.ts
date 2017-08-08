@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Harp } from './harp';
+import { SampleTimbre } from './instrument/sample-timbre';
+import { Instrument } from './instrument/instrument';
 
 @Injectable()
 export class AudioService {
 
   context = new AudioContext();
-  harp = new Harp(this.context);
+  harp = new Instrument(this.context, SampleTimbre);
 
   constructor() {
   }

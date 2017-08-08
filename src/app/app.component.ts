@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import { MidiInputDevice } from './midi-input-device';
 import { MidiOutputDevice } from './midi-output-device';
 import { MidiDevices } from './midi-devices';
-import { MidiMessage } from './midi-message';
+import { MidiMessage } from './midi/midi-message';
 import { MidiAudioService } from './midi-audio.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AudioService } from './audio.service';
-import { MidiMessage } from './midi-message';
+import { MidiMessage } from './midi/midi-message';
 
 @Injectable()
 export class MidiAudioService {
